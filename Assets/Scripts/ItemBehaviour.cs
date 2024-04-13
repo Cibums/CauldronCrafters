@@ -6,10 +6,14 @@ using UnityEngine;
 public class ItemBehaviour : MonoBehaviour
 {
     [SerializeField] public Item item;
-
     private Vector3 offset;
 
     private void Start()
+    {
+        UpdateGraphics();
+    }
+
+    public void UpdateGraphics()
     {
         GetComponentInChildren<SpriteRenderer>().sprite = item.graphics;
     }

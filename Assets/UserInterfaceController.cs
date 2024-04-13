@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using System.Linq;
+using UnityEngine.UI;
 
 public class UserInterfaceController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class UserInterfaceController : MonoBehaviour
 
     public Transform ReportPanel;
     public TextMeshProUGUI ReportPanelReport;
+    public Button ReportPanelNextButton;
 
     [Header("Popup UI")]
     public TextMeshProUGUI InformationWindowTitleText;
@@ -42,8 +44,11 @@ public class UserInterfaceController : MonoBehaviour
         CustomerRequestPanel.gameObject.SetActive(state);
     }
 
+    private bool reportHasFailed = false;
+
     public IEnumerator FillInReportIEnumerator()
     {
+        ReportPanelNextButton.enabled = false;
         ReportPanelReport.SetText("");
 
         Debug.Log("Filling Report");
@@ -139,11 +144,18 @@ public class UserInterfaceController : MonoBehaviour
                 totalFails++;
             }
 
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.8f);
         }
 
         WriteOneReportLine("");
         WriteOneReportLine($"Total Fails: {totalFails}");
+
+        if (totalFails > 0)
+        {
+            reportHasFailed = true;
+        }
+
+        ReportPanelNextButton.enabled = true;
     }
 
     public void WriteOneReportLine(string text)
@@ -170,5 +182,10 @@ public class UserInterfaceController : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
         }
+    }
+
+    public void NextOrRetry()
+    {
+        GameController.instance.NextCustomer(reportHasFailed);
     }
 }

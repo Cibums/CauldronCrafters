@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,13 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public CustomerRequest[] customerRequests;
+
+    [Header("Items")]
+    public GameObject ItemPrefab;
+    public Item[] allItems;
+    public List<int> unlockedItems = new List<int>();
+
+    [Header("Particles")]
     public ParticleSystem cauldronParticleSystem;
     public GameObject smokeParticlesPrefab;
 
@@ -55,7 +63,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         cauldronParticleSystem = GameObject.FindGameObjectWithTag("Cauldron").transform.GetComponentInChildren<ParticleSystem>();
-        NextCustomer();
+        NextCustomer(true);
     }
 
     public CustomerRequest GetCurrentCustomerRequest()
@@ -63,11 +71,18 @@ public class GameController : MonoBehaviour
         return customerRequests[customerIndex];
     }
 
-    private int customerIndex = -1;
-    void NextCustomer()
+    private int customerIndex = 0;
+    public void NextCustomer(bool retry)
     {
-        customerIndex++;
+        roundIsDone = false;
+
+        if (!retry)
+        {
+            customerIndex++;
+        }
+
         MonsterController.instance.ResetMonster();
+        ResetItems();
         cauldronParticleSystem.gameObject.SetActive(false);
 
         UserInterfaceController.instance.SetCustomerRequestVisibleState(true);
@@ -76,6 +91,18 @@ public class GameController : MonoBehaviour
         UserInterfaceController.instance.SetReportVisibleState(false);
 
         MoveCamera(new Vector2(0,0));
+    }
+
+    private void ResetItems()
+    {
+        foreach (int i in unlockedItems)
+        {
+            Transform spawnedItem = Instantiate(ItemPrefab).transform;
+            spawnedItem.position = new Vector3(UnityEngine.Random.Range(-7.5f, 0f), UnityEngine.Random.Range(-1.0f, 2.5f), 0);
+            ItemBehaviour behaviour = spawnedItem.gameObject.GetComponent<ItemBehaviour>();
+            behaviour.item = allItems[i];
+            behaviour.UpdateGraphics();
+        }
     }
 
     private void Update()
@@ -96,13 +123,13 @@ public class GameController : MonoBehaviour
 
         if (roundIsDone)
         {
-            NextCustomer();
-            roundIsDone = false;
             return;
         }
 
         StartCoroutine(SummonAndCreateMonster());
     }
+
+
 
     IEnumerator SummonAndCreateMonster()
     {
