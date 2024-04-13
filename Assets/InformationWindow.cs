@@ -38,7 +38,6 @@ public class InformationWindow : MonoBehaviour
 
     void OnMouseEnter()
     {
-        Debug.Log("Mouse entered on object: " + gameObject.name);
         popup.SetActive(true);
         UpdatePopupPosition();
 

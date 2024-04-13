@@ -8,8 +8,8 @@ public class ColorAction : BaseAction
 
     public override void InvokeAction()
     {
-        base.InvokeAction();
         Color monsterColor = MonsterColor.GetColor(color);
+        GameController.instance.SummonSmokeParticle(MonsterController.instance.gameObject.transform.position, monsterColor);
         MonsterController.instance.SetColor(monsterColor);
     }
 

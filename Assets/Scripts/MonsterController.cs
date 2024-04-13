@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 public class MonsterController : MonoBehaviour
@@ -24,6 +25,25 @@ public class MonsterController : MonoBehaviour
         graphics = gameObject.GetComponentInChildren<SpriteRenderer>();
     }
 
+    public Dictionary<string, int> ComparableList()
+    {
+        Dictionary<string, int> traitCounts = new Dictionary<string, int>();
+
+        foreach (string s in otherProperties)
+        {
+            if (traitCounts.ContainsKey(s))
+            {
+                traitCounts[s]++;
+            }
+            else
+            {
+                traitCounts.Add(s, 1);
+            }
+        }
+
+        return traitCounts;
+    }
+
     private void Start()
     {
         SetGraphicsShowState(false);
@@ -32,6 +52,12 @@ public class MonsterController : MonoBehaviour
     public void SetColor(Color color)
     {
         graphics.color = color;
+    }
+
+    public void ResetMonster()
+    {
+        SetColor(Color.white);
+        graphics.gameObject.SetActive(false);
     }
 
     public void SetSize(float size)
@@ -74,6 +100,8 @@ public class MonsterController : MonoBehaviour
     private IEnumerator InvokeActionsInItemsIEnumerator(float seconds)
     {
         isInvokingActions = true;
+        yield return new WaitForSeconds(seconds);
+
         foreach (Item item in addedItems) 
         {
             foreach (BaseAction action in item.actions)

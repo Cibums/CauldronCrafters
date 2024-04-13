@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public CustomerRequest customerRequest;
+    public CustomerRequest[] customerRequests;
     public ParticleSystem cauldronParticleSystem;
     public GameObject smokeParticlesPrefab;
 
@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
 
     public void GoToMonsterView()
     {
+        UserInterfaceController.instance.SetCustomerRequestVisibleState(false);
         MoveCamera(new Vector2(9.2f, 0.8f));
     }
 
@@ -54,8 +55,27 @@ public class GameController : MonoBehaviour
     void Start()
     {
         cauldronParticleSystem = GameObject.FindGameObjectWithTag("Cauldron").transform.GetComponentInChildren<ParticleSystem>();
+        NextCustomer();
+    }
+
+    public CustomerRequest GetCurrentCustomerRequest()
+    {
+        return customerRequests[customerIndex];
+    }
+
+    private int customerIndex = -1;
+    void NextCustomer()
+    {
+        customerIndex++;
+        MonsterController.instance.ResetMonster();
         cauldronParticleSystem.gameObject.SetActive(false);
-        UserInterfaceController.instance.SetCustomerText(customerRequest.GetMonsterDescription());
+
+        UserInterfaceController.instance.SetCustomerRequestVisibleState(true);
+        UserInterfaceController.instance.SetCustomerText(customerRequests[customerIndex].GetMonsterDescription());
+
+        UserInterfaceController.instance.SetReportVisibleState(false);
+
+        MoveCamera(new Vector2(0,0));
     }
 
     private void Update()
@@ -69,12 +89,18 @@ public class GameController : MonoBehaviour
     private bool roundIsDone = false;
     public void OnPlayerDoneClicked()
     {
-        if (MonsterController.instance.IsInvokingActions() || roundIsDone)
+        if (MonsterController.instance.IsInvokingActions())
         {
             return;
         }
 
-        roundIsDone = true;
+        if (roundIsDone)
+        {
+            NextCustomer();
+            roundIsDone = false;
+            return;
+        }
+
         StartCoroutine(SummonAndCreateMonster());
     }
 
@@ -104,10 +130,12 @@ public class GameController : MonoBehaviour
 
     private void OnActionsAreDone()
     {
-        (int rating, MonsterRatingReport report) = customerRequest.WantedMonsterProperties.GetComparisonRating();
+        roundIsDone = true;
+        UserInterfaceController.instance.SetReportVisibleState(true);
+        StartCoroutine(UserInterfaceController.instance.FillInReportIEnumerator());
     }
 
-    private void SummonSmokeParticle(Vector3 position, Color color)
+    public void SummonSmokeParticle(Vector3 position, Color color)
     {
         GameObject smokeParticles = Instantiate(smokeParticlesPrefab);
         smokeParticles.transform.position = new Vector3(position.x, position.y, smokeParticles.transform.position.z);

@@ -17,7 +17,6 @@ public class Item : ScriptableObject, ISerializationCallbackReceiver
         foreach (BaseAction action in actions)
         {
             string actionText = action.ActionText();
-            Debug.Log($"Action:{actionText}!");
 
             if( actionText != string.Empty)
             {

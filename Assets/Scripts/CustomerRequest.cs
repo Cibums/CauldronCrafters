@@ -38,8 +38,6 @@ public class MonsterProperySettings
     }
 }
 
-
-
 [Serializable]
 public class MonsterProperties
 {
@@ -50,51 +48,6 @@ public class MonsterProperties
 
     public List<MonsterProperySettings> otherProperties = new List<MonsterProperySettings>();
 
-    public (int rating, MonsterRatingReport report) GetComparisonRating()
-    {
-        int comparisonRating = 0;
-        MonsterRatingReport report = new MonsterRatingReport();
-
-        foreach (MonsterProperySettings property in otherProperties)
-        {
-            int count = MonsterController.instance.otherProperties.Count(item => item == property.Trait);
-
-            if ((property.AmountRule == MonsterProperySettings.AmountSetting.Exact && property.Count != count))
-            {
-                report.wrongProperties.Add(property.Trait);
-                continue;
-            }
-
-            if ((property.AmountRule == MonsterProperySettings.AmountSetting.Minimum && property.Count < count))
-            {
-                report.wrongProperties.Add(property.Trait);
-                continue;
-            }
-
-            comparisonRating += count;
-        }
-
-        if (ColorMatters && PaletteColor == MonsterController.instance.currentColor)
-        {
-            comparisonRating += 1;
-        }
-        else
-        {
-            report.colorIsWrong = true;
-        }
-
-        if (ColorMatters && PaletteColor == MonsterController.instance.currentColor)
-        {
-            comparisonRating += 1;
-        }
-        else
-        {
-            report.sizeIsWrong = true;
-        }
-
-        return (comparisonRating, report);
-    }
-
     public string AutomaticMonsterDescription()
     {
         return SimplifiedMonsterDescription();
@@ -102,7 +55,7 @@ public class MonsterProperties
 
     public string SimplifiedMonsterDescription()
     {
-        string ret = "The creature should have these traits: \n";
+        string ret = string.Empty;
 
         if (ColorMatters)
         {
@@ -143,7 +96,7 @@ public class MonsterProperties
         return ret;
     }
 
-    private string GetCountLocalization(int count)
+    public string GetCountLocalization(int count)
     {
         switch (count)
         {
@@ -152,15 +105,13 @@ public class MonsterProperties
             case 1:
                 return "Kinda (1x)";
             case 2:
-                return "Mighty (2x)";
+                return "Hella (2x)";
             case 3:
-                return "Hella (3x)";
+                return "Ridiculously (3x)";
             case 4:
-                return "Ridiculously (4x)";
+                return "Outrageously (4x)";
             case 5:
-                return "Outrageously (5x)";
-            case 6:
-                return "Stupendously (6x)";
+                return "Stupendously (5x)";
             default:
                 return string.Empty;
         }

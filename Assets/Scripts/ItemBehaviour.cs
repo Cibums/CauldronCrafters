@@ -27,8 +27,6 @@ public class ItemBehaviour : MonoBehaviour
 
     private void OnMouseUp()
     {
-        Debug.Log(item.GetActionsText());
-
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
