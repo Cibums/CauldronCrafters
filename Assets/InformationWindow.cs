@@ -10,7 +10,7 @@ public class InformationWindow : MonoBehaviour
 
     private void Awake()
     {
-        popup = GameObject.FindGameObjectWithTag("InformationWindow");
+        popup = UserInterfaceController.instance.InformationWindowPanel;
         popupCanvas = GameObject.FindGameObjectWithTag("PopupCanvas").GetComponent<Canvas>();
 
         mainCamera = Camera.main;

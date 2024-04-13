@@ -95,6 +95,15 @@ public class GameController : MonoBehaviour
 
     private void ResetItems()
     {
+        MonsterController.instance.addedItems.Clear();
+
+        GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+
+        foreach (GameObject item in items)
+        {
+            Destroy(item);
+        }
+
         foreach (int i in unlockedItems)
         {
             Transform spawnedItem = Instantiate(ItemPrefab).transform;

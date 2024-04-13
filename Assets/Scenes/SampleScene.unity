@@ -1094,6 +1094,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758009478}
   m_CullTransparentMesh: 1
+--- !u!1 &787681301
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 787681302}
+  - component: {fileID: 787681304}
+  - component: {fileID: 787681303}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &787681302
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787681301}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1518225010}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &787681303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787681301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &787681304
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787681301}
+  m_CullTransparentMesh: 1
 --- !u!114 &834371659 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3938933792725675055, guid: a9ccc7ed84ea0f847ac2142415255769, type: 3}
@@ -6333,6 +6408,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1184933588 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7471156467728379426, guid: a9ccc7ed84ea0f847ac2142415255769, type: 3}
+  m_PrefabInstance: {fileID: 2631802429709481178}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1184933589 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3211030887142297595, guid: a9ccc7ed84ea0f847ac2142415255769, type: 3}
@@ -6675,11 +6755,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a82406d17f06d1f46818bee887a45c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BackgroundPanel: {fileID: 787681302}
   CustomerRequestPanel: {fileID: 641929917}
   CustomerRequestText: {fileID: 1201091898}
   ReportPanel: {fileID: 925236939}
   ReportPanelReport: {fileID: 1400611375}
   ReportPanelNextButton: {fileID: 567889333}
+  InformationWindowPanel: {fileID: 1184933588}
   InformationWindowTitleText: {fileID: 1929616898}
   InformationWindowDescriptionText: {fileID: 834371659}
 --- !u!1 &1518225006
@@ -6776,6 +6858,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 787681302}
   - {fileID: 641929917}
   - {fileID: 925236939}
   m_Father: {fileID: 0}

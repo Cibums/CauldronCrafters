@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class UserInterfaceController : MonoBehaviour
 {
     [Header("Overlay UI")]
+    public Transform BackgroundPanel;
     public Transform CustomerRequestPanel;
     public TextMeshProUGUI CustomerRequestText;
 
@@ -17,6 +18,7 @@ public class UserInterfaceController : MonoBehaviour
     public Button ReportPanelNextButton;
 
     [Header("Popup UI")]
+    public GameObject InformationWindowPanel;
     public TextMeshProUGUI InformationWindowTitleText;
     public TextMeshProUGUI InformationWindowDescriptionText;
 
@@ -37,6 +39,7 @@ public class UserInterfaceController : MonoBehaviour
     public void SetReportVisibleState(bool state)
     {
         ReportPanel.gameObject.SetActive(state);
+        BackgroundPanel.gameObject.SetActive(state);
     }
 
     public void SetCustomerRequestVisibleState(bool state)
