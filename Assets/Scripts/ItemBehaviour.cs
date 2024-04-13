@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ItemBehaviour : MonoBehaviour
@@ -35,6 +36,38 @@ public class ItemBehaviour : MonoBehaviour
         {
             if (hit.collider.gameObject.CompareTag("Cauldron"))
             {
+                SpriteRenderer cauldronSpriteRenderer = hit.collider.gameObject.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+                ParticleSystem cauldronParticleSystem = GameController.instance.cauldronParticleSystem;
+
+                Color existingColor = cauldronSpriteRenderer.color;
+
+                List<ColorAction> colorActions = item.actions.OfType<ColorAction>().ToList();
+
+                if (colorActions.Count > 0)
+                {
+                    foreach (ColorAction colorAction in colorActions)
+                    {
+                        Color colorToAdd = MonsterColor.GetColor(colorAction.color);
+
+                        //Mixing mixing
+                        Color mixedColor = new Color(
+                            (existingColor.r + colorToAdd.r) / 2,
+                            (existingColor.g + colorToAdd.g) / 2,
+                            (existingColor.b + colorToAdd.b) / 2,
+                            1
+                        );
+
+                        if (cauldronParticleSystem != null)
+                        {
+                            var mainModule = cauldronParticleSystem.main;
+                            mainModule.startColor = mixedColor;
+                        }
+
+                        cauldronSpriteRenderer.color = mixedColor;
+                        existingColor = mixedColor;
+                    }
+                }
+
                 MonsterController.instance.addedItems.Add(item);
                 Destroy(gameObject);
                 return;

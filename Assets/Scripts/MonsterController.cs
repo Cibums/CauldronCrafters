@@ -24,6 +24,11 @@ public class MonsterController : MonoBehaviour
         graphics = gameObject.GetComponentInChildren<SpriteRenderer>();
     }
 
+    private void Start()
+    {
+        SetGraphicsShowState(false);
+    }
+
     public void SetColor(Color color)
     {
         graphics.color = color;
@@ -48,6 +53,11 @@ public class MonsterController : MonoBehaviour
         {
             otherProperties.Add(prop);
         }
+    }
+
+    public void SetGraphicsShowState(bool state)
+    {
+        graphics.gameObject.SetActive(state);
     }
 
     public void InvokeActionsInItems(float seconds)
