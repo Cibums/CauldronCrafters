@@ -2,10 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UserInterfaceController : MonoBehaviour
 {
-    public TextMeshProUGUI Text;
+    [InspectorLabel("Overlay UI")]
+    public TextMeshProUGUI CustomerRequestText;
+
+    [InspectorLabel("Popup UI")]
+    public TextMeshProUGUI InformationWindowTitleText;
+    public TextMeshProUGUI InformationWindowDescriptionText;
 
     public static UserInterfaceController instance;
     private void Awake()
@@ -31,7 +37,7 @@ public class UserInterfaceController : MonoBehaviour
         {
             yield return new WaitForSeconds(0.03f * word.Length);
             totalString += word + " ";
-            Text.SetText(totalString);
+            CustomerRequestText.SetText(totalString);
 
             if (word.Contains("..."))
             {

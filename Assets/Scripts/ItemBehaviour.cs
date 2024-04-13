@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemBehaviour : MonoBehaviour
 {
-    [SerializeField] private Item item;
+    [SerializeField] public Item item;
 
     private Vector3 offset;
 

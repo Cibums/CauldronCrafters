@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class MonsterController : MonoBehaviour
@@ -7,8 +8,8 @@ public class MonsterController : MonoBehaviour
     public static MonsterController instance;
     private SpriteRenderer graphics;
 
-    [HideInInspector] public PaletteColor? currentColor;
-    [HideInInspector] public MonsterSizeGetter currentSize = MonsterSizeGetter.Medium;
+    public PaletteColor currentColor;
+    public MonsterSizeGetter currentSize = MonsterSizeGetter.Medium;
 
     public List<Item> addedItems = new List<Item>();
     public List<string> otherProperties = new List<string>();
