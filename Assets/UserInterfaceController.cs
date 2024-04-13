@@ -6,10 +6,10 @@ using Unity.VisualScripting;
 
 public class UserInterfaceController : MonoBehaviour
 {
-    [InspectorLabel("Overlay UI")]
+    [Header("Overlay UI")]
     public TextMeshProUGUI CustomerRequestText;
 
-    [InspectorLabel("Popup UI")]
+    [Header("Popup UI")]
     public TextMeshProUGUI InformationWindowTitleText;
     public TextMeshProUGUI InformationWindowDescriptionText;
 
