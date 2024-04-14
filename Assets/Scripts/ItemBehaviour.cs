@@ -49,7 +49,7 @@ public class ItemBehaviour : MonoBehaviour
                 {
                     foreach (ColorAction colorAction in colorActions)
                     {
-                        Color colorToAdd = MonsterColor.GetColor(colorAction.color);
+                        (Color colorToAdd, PaletteColor paletteColor) = MonsterColor.GetColor(colorAction.color);
 
                         //Mixing mixing
                         Color mixedColor = new Color(

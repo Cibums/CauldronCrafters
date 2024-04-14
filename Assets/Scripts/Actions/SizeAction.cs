@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,6 +13,7 @@ public class SizeAction : BaseAction
         base.InvokeAction();
         float monsterSize = GetSize(size);
         MonsterController.instance.SetSize(monsterSize);
+        MonsterController.instance.currentSize = GetSize(MonsterController.instance.transform.localScale.x);
     }
 
     public override string ActionText()
@@ -20,7 +22,7 @@ public class SizeAction : BaseAction
         {
             // Exclude the 'Random' and 'Increase' and 'Decrease' enum value by limiting the range
             int maxEnumIndex = System.Enum.GetValues(typeof(MonsterSize)).Length - 4;
-            size = (MonsterSize)Random.Range(0, maxEnumIndex + 1);
+            size = (MonsterSize)UnityEngine.Random.Range(0, maxEnumIndex + 1);
         }
 
         if (size == MonsterSize.Increase || size == MonsterSize.Decrease)
@@ -48,6 +50,18 @@ public class SizeAction : BaseAction
             default:
                 return 1f;
         }
+    }
+
+    private MonsterSizeGetter GetSize(float size)
+    {
+        if (Mathf.Approximately(size, 0.5f))
+            return MonsterSizeGetter.Small;
+        else if (Mathf.Approximately(size, 1.0f))
+            return MonsterSizeGetter.Medium;
+        else if (Mathf.Approximately(size, 1.5f))
+            return MonsterSizeGetter.Large;
+
+        throw new ArgumentOutOfRangeException("size", "The provided size does not correspond to a defined MonsterSizeGetter.");
     }
 }
 

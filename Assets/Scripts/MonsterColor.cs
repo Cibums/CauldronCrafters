@@ -17,7 +17,7 @@ public enum PaletteColor
 
 public static class MonsterColor
 {
-    public static Color GetColor(PaletteColor color)
+    public static (Color color, PaletteColor paletteColor) GetColor(PaletteColor color)
     {
         if (color == PaletteColor.Random)
         {
@@ -29,24 +29,24 @@ public static class MonsterColor
         switch (color)
         {
             case PaletteColor.Blue:
-                return Color.blue;
+                return (Color.blue, PaletteColor.Blue);
             case PaletteColor.Green:
-                return Color.green;
+                return (Color.green, PaletteColor.Green);
             case PaletteColor.Red:
-                return Color.red;
+                return (Color.red, PaletteColor.Red);
             case PaletteColor.Orange:
-                return new Color(1f, 0.64f, 0f);
+                return (new Color(1f, 0.64f, 0f), PaletteColor.Orange);
             case PaletteColor.Yellow:
-                return Color.yellow;
+                return (Color.yellow, PaletteColor.Yellow);
             case PaletteColor.Cyan:
-                return Color.cyan;
+                return (Color.cyan, PaletteColor.Cyan);
             case PaletteColor.Pink:
-                return new Color(1f, 0.75f, 0.8f); // RGB for pink
+                return (new Color(1f, 0.75f, 0.8f), PaletteColor.Pink);
             case PaletteColor.Purple:
-                return new Color(0.5f, 0f, 0.5f); // RGB for purple
+                return (new Color(0.5f, 0f, 0.5f), PaletteColor.Purple);
             default:
                 Debug.LogError("Color not defined in the palette!");
-                return Color.white;
+                return (Color.white, PaletteColor.Random);
         }
     }
 }

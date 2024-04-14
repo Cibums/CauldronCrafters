@@ -54,8 +54,6 @@ public class UserInterfaceController : MonoBehaviour
 
     public void ShowGeneralPopup(string title, string content)
     {
-        Debug.Log("Showing");
-
         GeneralInformationWindowPopup.gameObject.SetActive(true);
         BackgroundPanel.gameObject.SetActive(true);
 
@@ -75,13 +73,11 @@ public class UserInterfaceController : MonoBehaviour
     }
 
     private bool reportHasFailed = false;
-
     public IEnumerator FillInReportIEnumerator()
     {
+        reportHasFailed = false;
         ReportPanelNextButton.enabled = false;
         ReportPanelReport.SetText("");
-
-        Debug.Log("Filling Report");
 
         int totalFails = 0;
 
@@ -94,7 +90,7 @@ public class UserInterfaceController : MonoBehaviour
         {
             if (MonsterController.instance.currentSize == monsterProperties.MonsterSize)
             {
-                WriteOneReportLine($"[Success] The customer wanted a {monsterProperties.MonsterSize.ToString().ToUpper()} creature, and it was</color>");
+                WriteOneReportLine($"[Success] The customer wanted a {monsterProperties.MonsterSize.ToString().ToUpper()} creature, and it was");
             }
             else
             {
@@ -105,9 +101,10 @@ public class UserInterfaceController : MonoBehaviour
 
         if(monsterProperties.ColorMatters)
         {
+            Debug.Log(MonsterController.instance.currentColor);
             if (MonsterController.instance.currentColor == monsterProperties.PaletteColor)
             {
-                WriteOneReportLine($"[Success] The customer wanted a {monsterProperties.PaletteColor.ToString().ToUpper()} creature, and it was</color>");
+                WriteOneReportLine($"[Success] The customer wanted a {monsterProperties.PaletteColor.ToString().ToUpper()} creature, and it was");
             }
             else
             {
@@ -186,6 +183,20 @@ public class UserInterfaceController : MonoBehaviour
         }
 
         ReportPanelNextButton.enabled = true;
+    }
+
+    private bool isSimplified = false;
+    public void SwitchCustomerRequestText()
+    {
+        isSimplified = !isSimplified;
+
+        if (isSimplified)
+        {
+            CustomerRequestText.SetText(GameController.instance.GetCurrentCustomerRequest().WantedMonsterProperties.SimplifiedMonsterDescription());
+            return;
+        }
+
+        CustomerRequestText.SetText(GameController.instance.GetCurrentCustomerRequest().GetMonsterDescription());
     }
 
     public void WriteOneReportLine(string text)

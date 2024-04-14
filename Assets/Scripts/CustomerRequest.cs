@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 
@@ -55,11 +56,12 @@ public class MonsterProperties
 
     public string SimplifiedMonsterDescription()
     {
-        string ret = string.Empty;
+        string ret = "<b>The customer wants:</b> \n";
 
         if (ColorMatters)
         {
-            ret += $"- Colored {PaletteColor.ToString().ToUpper()} \n";
+            string colorStr = MonsterColor.GetColor(PaletteColor).color.ToHexString();
+            ret += $"- Colored <color=#{colorStr}>{PaletteColor.ToString().ToUpper()}</color> \n";
         }
 
         if (SizeMatters)
