@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f18d2c4c941155b43aca0ec7b3e5bea9, type: 3}
+  m_Name: Lonely
+  m_EditorClassIdentifier: 
+  RichMonsterDescription: hello... i'm very lonely, i need a <b>FUNNY</b> friend
+    that is <b>OUTGOING</b>. then maybe i can be less lonely
+  WantedMonsterProperties:
+    ColorMatters: 0
+    PaletteColor: 0
+    SizeMatters: 0
+    MonsterSize: 0
+    otherProperties:
+    - Trait: funny
+      AmountRule: 1
+      Count: 2
+    - Trait: outgoing
+      AmountRule: 1
+      Count: 2
