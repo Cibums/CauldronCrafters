@@ -12,8 +12,21 @@ public class SizeAction : BaseAction
     {
         base.InvokeAction();
         float monsterSize = GetSize(size);
+
+        MonsterState oldState = MonsterController.instance.monsterState;
+        MonsterController.instance.monsterState = UpdateStateFromAction(oldState);
+
         MonsterController.instance.SetSize(monsterSize);
-        MonsterController.instance.currentSize = GetSize(MonsterController.instance.transform.localScale.x);
+    }
+
+    public override MonsterState UpdateStateFromAction(MonsterState oldState)
+    {
+        MonsterState newState = oldState;
+        float monsterSize = GetSize(size);
+
+        newState.currentSize = GetSize(monsterSize);
+
+        return newState;
     }
 
     public override string ActionText()

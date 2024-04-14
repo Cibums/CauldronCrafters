@@ -1,11 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public CustomerRequest[] customerRequests;
+    public CustomerRequest[] allCustomerRequests;
+    public HashSet<int> completedCustomers = new HashSet<int>();
+
+    [SerializeField] private List<int> completedCustomersList = new List<int>(); //Only to see the hashset in the inspector
 
     [Header("Items")]
     public GameObject ItemPrefab;
@@ -46,6 +51,14 @@ public class GameController : MonoBehaviour
         } while (unlockedItems.Contains(randomIndex));
 
         unlockedItems.Add(randomIndex);
+
+        Item itemUnlocked = allItems[randomIndex];
+
+        UserInterfaceController.instance.ShowGeneralPopup(
+            itemUnlocked.itemName, 
+            $"You unlocked <b>{itemUnlocked.itemName}</b>\nThis is what it does:\n\n{itemUnlocked.GetActionsText()}"
+        );
+
         Debug.Log("Unlocked item at index: " + randomIndex);
     }
 
@@ -87,39 +100,75 @@ public class GameController : MonoBehaviour
     void Start()
     {
         cauldronParticleSystem = GameObject.FindGameObjectWithTag("Cauldron").transform.GetComponentInChildren<ParticleSystem>();
-        NextCustomer(true);
+        NextCustomer(false, true);
     }
 
     public CustomerRequest GetCurrentCustomerRequest()
     {
-        return customerRequests[customerIndex];
+        return allCustomerRequests[currentCustomerRequestIndex];
     }
 
-    private int customerIndex = 0;
-    public void NextCustomer(bool retry)
+    private CustomerRequest GetRandomValidCustomerRequest() 
+    {
+        List<CustomerRequest> validCustomerRequests = allCustomerRequests
+            .Select((request, index) => new { Request = request, Index = index })  // Project each request with its index
+            .Where(x => !completedCustomers.Contains(x.Index))  // Filter out requests with indexes in the completedCustomers HashSet
+            .Select(x => x.Request).ToList();  // Select only the request part for the result
+
+        while (validCustomerRequests.Count > 0)
+        {
+            int index = UnityEngine.Random.Range(0, validCustomerRequests.Count); // Get a random index
+            CustomerRequest request = validCustomerRequests[index];  // Retrieve the request at this index
+            if (RequestChecker.RequestIsPossibleWithUnlockedItems(request))
+            {
+                return request;  // Return the request if it passes the checker
+            }
+            validCustomerRequests.RemoveAt(index);  // Remove the request from the list if it fails the checker
+        }
+
+        throw new InvalidOperationException("No valid customer requests available.");
+    }
+
+    private int currentCustomerRequestIndex = 0;
+    public void NextCustomer(bool retry, bool isFirst = false)
     {
         roundIsDone = false;
 
-        if (!retry)
+        if (!retry && !isFirst)
         {
-            customerIndex++;
+            if (allCustomerRequests[currentCustomerRequestIndex] != null)
+            {
+                completedCustomers.Add(currentCustomerRequestIndex);
+                completedCustomersList = completedCustomers.ToList();
+            }
         }
 
-        if (customerIndex % 2 == 0 && customerIndex > 0)
+        if (completedCustomers.Count % 2 == 0 && completedCustomers.Count > 0)
         {
             UnlockRandomItem();
         }
 
         MonsterController.instance.ResetMonster();
         ResetItems();
+
+        CustomerRequest customerRequest = allCustomerRequests[currentCustomerRequestIndex];
+
+        if (!retry)
+        {
+            customerRequest = GetRandomValidCustomerRequest();
+            currentCustomerRequestIndex = Array.FindIndex(allCustomerRequests, x => x.Equals(customerRequest));
+        }
+
         cauldronParticleSystem.gameObject.SetActive(false);
 
         UserInterfaceController.instance.SetCustomerRequestVisibleState(true);
-        UserInterfaceController.instance.SetCustomerText(customerRequests[customerIndex].GetMonsterDescription());
+        UserInterfaceController.instance.SetCustomerText(customerRequest.GetMonsterDescription());
 
         UserInterfaceController.instance.SetReportVisibleState(false);
 
         MoveCamera(new Vector2(0,0));
+
+        //Debug.Log($"Customer Request Possibilty: {RequestChecker.RequestIsPossibleWithUnlockedItems(allCustomerRequests[customerIndex])}");
     }
 
     private void ResetItems()

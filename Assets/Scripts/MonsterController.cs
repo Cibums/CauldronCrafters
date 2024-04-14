@@ -9,11 +9,9 @@ public class MonsterController : MonoBehaviour
     public static MonsterController instance;
     private SpriteRenderer graphics;
 
-    public PaletteColor currentColor;
-    public MonsterSizeGetter currentSize = MonsterSizeGetter.Medium;
+    public MonsterState monsterState;
 
     public List<Item> addedItems = new List<Item>();
-    public List<string> otherProperties = new List<string>();
 
     private void Awake()
     {
@@ -22,26 +20,8 @@ public class MonsterController : MonoBehaviour
             instance = this;
         }
 
+        monsterState = new MonsterState();
         graphics = gameObject.GetComponentInChildren<SpriteRenderer>();
-    }
-
-    public Dictionary<string, int> ComparableList()
-    {
-        Dictionary<string, int> traitCounts = new Dictionary<string, int>();
-
-        foreach (string s in otherProperties)
-        {
-            if (traitCounts.ContainsKey(s))
-            {
-                traitCounts[s]++;
-            }
-            else
-            {
-                traitCounts.Add(s, 1);
-            }
-        }
-
-        return traitCounts;
     }
 
     private void Start()
@@ -63,22 +43,6 @@ public class MonsterController : MonoBehaviour
     public void SetSize(float size)
     {
         transform.localScale = new Vector2(size, size);
-    }
-
-    public void ChangeProperty(string prop, bool shouldRemove, bool ableToIncrease)
-    {
-        if (shouldRemove)
-        {
-            otherProperties.RemoveAll(item => item == prop);
-        }
-        else if (ableToIncrease)
-        {
-            otherProperties.Add(prop);
-        }
-        else if(!otherProperties.Contains(prop))
-        {
-            otherProperties.Add(prop);
-        }
     }
 
     public void SetGraphicsShowState(bool state)

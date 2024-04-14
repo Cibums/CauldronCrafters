@@ -119,29 +119,3 @@ public class MonsterProperties
         }
     }
 }
-
-public class MonsterRatingReport
-{
-    public bool colorIsWrong;
-    public bool sizeIsWrong;
-    public HashSet<string> wrongProperties;
-
-    public bool HadAtLeastOneWrong()
-    {
-        return colorIsWrong || sizeIsWrong || wrongProperties.Count > 0;
-    }
-
-    public MonsterRatingReport()
-    {
-        this.colorIsWrong = false;
-        this.sizeIsWrong = false;
-        wrongProperties = new HashSet<string>();
-    }
-
-    public MonsterRatingReport(bool colorIsWrong, bool sizeIsWrong, HashSet<string> wrongProperties)
-    {
-        this.colorIsWrong = colorIsWrong;
-        this.sizeIsWrong = sizeIsWrong;
-        this.wrongProperties = wrongProperties;
-    }
-}

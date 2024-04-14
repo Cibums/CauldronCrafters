@@ -84,11 +84,11 @@ public class UserInterfaceController : MonoBehaviour
         MonsterProperties monsterProperties = GameController.instance.GetCurrentCustomerRequest().WantedMonsterProperties;
         List<MonsterProperySettings> settings = monsterProperties.otherProperties;
 
-        Dictionary<string, int> currentMonsterProperties = MonsterController.instance.ComparableList();
+        Dictionary<string, int> currentMonsterProperties = MonsterController.instance.monsterState.ComparableList();
 
         if (monsterProperties.SizeMatters)
         {
-            if (MonsterController.instance.currentSize == monsterProperties.MonsterSize)
+            if (MonsterController.instance.monsterState.currentSize == monsterProperties.MonsterSize)
             {
                 WriteOneReportLine($"[Success] The customer wanted a {monsterProperties.MonsterSize.ToString().ToUpper()} creature, and it was");
             }
@@ -101,8 +101,7 @@ public class UserInterfaceController : MonoBehaviour
 
         if(monsterProperties.ColorMatters)
         {
-            Debug.Log(MonsterController.instance.currentColor);
-            if (MonsterController.instance.currentColor == monsterProperties.PaletteColor)
+            if (MonsterController.instance.monsterState.currentColor == monsterProperties.PaletteColor)
             {
                 WriteOneReportLine($"[Success] The customer wanted a {monsterProperties.PaletteColor.ToString().ToUpper()} creature, and it was");
             }
@@ -115,12 +114,8 @@ public class UserInterfaceController : MonoBehaviour
 
         foreach (MonsterProperySettings setting in settings)
         {
-            Debug.Log("Going through setting " + setting.Trait);
-
             if (setting.AmountRule == MonsterProperySettings.AmountSetting.Exact)
             {
-                Debug.Log(setting.Trait + " should be exactly " + setting.Count);
-
                 string countString = monsterProperties.GetCountLocalization(setting.Count);
 
                 if (currentMonsterProperties.ContainsKey(setting.Trait) && currentMonsterProperties[setting.Trait] == setting.Count)
@@ -135,8 +130,6 @@ public class UserInterfaceController : MonoBehaviour
             }
             else if (setting.AmountRule == MonsterProperySettings.AmountSetting.Minimum)
             {
-                Debug.Log(setting.Trait + " should be minimum " + setting.Count);
-
                 string countString = monsterProperties.GetCountLocalization(setting.Count);
 
                 if (currentMonsterProperties.ContainsKey(setting.Trait) && currentMonsterProperties[setting.Trait] >= setting.Count)
@@ -151,16 +144,12 @@ public class UserInterfaceController : MonoBehaviour
             }
             else if (setting.AmountRule == MonsterProperySettings.AmountSetting.None)
             {
-                Debug.Log(setting.Trait + " should be minimum 1");
-
                 if (currentMonsterProperties.ContainsKey(setting.Trait))
                 {
-                    Debug.Log($"[Success] The customer wanted a {setting.Trait} creature and it was");
                     WriteOneReportLine($"[Success] The customer wanted a {setting.Trait} creature and it was");
                 }
                 else
                 {
-                    Debug.Log($"<color=red>[Fail] {setting.Trait}</color>");
                     WriteOneReportLine($"<color=red>[Fail] The customer wanted a {setting.Trait} creature, but it was not</color>");
                     totalFails++;
                 }
@@ -202,7 +191,6 @@ public class UserInterfaceController : MonoBehaviour
     public void WriteOneReportLine(string text)
     {
         string t = ReportPanelReport.text;
-        Debug.Log(t + text + "\n");
         ReportPanelReport.SetText(t + text + "\n");
     }
 

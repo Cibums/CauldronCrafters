@@ -7062,7 +7062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aaa3c35e90c3ff4dac283f5bcb50d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customerRequests:
+  allCustomerRequests:
   - {fileID: 11400000, guid: 5b512c6f204a5c246a978eb4b264abc5, type: 2}
   - {fileID: 11400000, guid: 5cc87745c73492d4fa096f342db67dc1, type: 2}
   - {fileID: 11400000, guid: d680b787dc8b8a843bc75f7d829ac077, type: 2}
@@ -7264,10 +7264,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea0c76698beb604aae8f33596db3665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentColor: 0
-  currentSize: 1
+  monsterState:
+    currentColor: 0
+    currentSize: 1
+    otherProperties: []
   addedItems: []
-  otherProperties: []
 --- !u!1 &1594996667
 GameObject:
   m_ObjectHideFlags: 0
