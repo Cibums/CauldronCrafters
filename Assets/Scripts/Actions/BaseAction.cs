@@ -8,6 +8,7 @@ public class BaseAction
     {
         //Animations and cool effects that will happen for each item
         GameController.instance.SummonSmokeParticle(MonsterController.instance.gameObject.transform.position, Color.white);
+        AudioController.instance.PlaySound(1); //explosion
     }
 
     public virtual MonsterState UpdateStateFromAction(MonsterState oldState)

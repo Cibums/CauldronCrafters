@@ -169,6 +169,11 @@ public class UserInterfaceController : MonoBehaviour
         if (totalFails > 0)
         {
             reportHasFailed = true;
+            AudioController.instance.PlaySound(8, 0.6f); //fail
+        }
+        else
+        {
+            AudioController.instance.PlaySound(7, 0.6f); //success
         }
 
         ReportPanelNextButton.enabled = true;
@@ -177,6 +182,8 @@ public class UserInterfaceController : MonoBehaviour
     private bool isSimplified = false;
     public void SwitchCustomerRequestText()
     {
+        AudioController.instance.PlaySound(0);
+
         isSimplified = !isSimplified;
 
         if (isSimplified)
@@ -192,6 +199,7 @@ public class UserInterfaceController : MonoBehaviour
     {
         string t = ReportPanelReport.text;
         ReportPanelReport.SetText(t + text + "\n");
+        AudioController.instance.PlaySound(2); //on_floor
     }
 
     IEnumerator WriteCustomerText(string text)
@@ -205,6 +213,7 @@ public class UserInterfaceController : MonoBehaviour
             yield return new WaitForSeconds(0.03f * word.Length);
             totalString += word + " ";
             CustomerRequestText.SetText(totalString);
+            AudioController.instance.PlaySound(4, 0.6f); //talk
 
             if (word.Contains("..."))
             {
@@ -215,6 +224,7 @@ public class UserInterfaceController : MonoBehaviour
 
     public void NextOrRetry()
     {
+        AudioController.instance.PlaySound(0); //click
         GameController.instance.NextCustomer(reportHasFailed);
     }
 }

@@ -7043,6 +7043,7 @@ GameObject:
   - component: {fileID: 1448473449}
   - component: {fileID: 1448473448}
   - component: {fileID: 1448473450}
+  - component: {fileID: 1448473451}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -7066,6 +7067,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5b512c6f204a5c246a978eb4b264abc5, type: 2}
   - {fileID: 11400000, guid: 5cc87745c73492d4fa096f342db67dc1, type: 2}
   - {fileID: 11400000, guid: d680b787dc8b8a843bc75f7d829ac077, type: 2}
+  completedCustomersList: 
   ItemPrefab: {fileID: 4662032139587918127, guid: ce3ca8215d57b434b81590db8dc43f0f, type: 3}
   allItems:
   - {fileID: 11400000, guid: 6344ea4f7ea6a2c4aa23d9c7975ede22, type: 2}
@@ -7114,6 +7116,29 @@ MonoBehaviour:
   InformationWindowPanel: {fileID: 1184933588}
   InformationWindowTitleText: {fileID: 1929616898}
   InformationWindowDescriptionText: {fileID: 834371659}
+--- !u!114 &1448473451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448473447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f92e3937c4ba8a4998ee7ba3180f6c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioClips:
+  - {fileID: 8300000, guid: 9305458aa6703264ebfcc74caa4bab35, type: 3}
+  - {fileID: 8300000, guid: 5dec5b03b0fc42d409704d542ed4812f, type: 3}
+  - {fileID: 8300000, guid: ba9e21dc0295c8b42a4214050f1a2469, type: 3}
+  - {fileID: 8300000, guid: 07076280ef8c55c48810bc3c9a3f6617, type: 3}
+  - {fileID: 8300000, guid: 241816be1cb1a204d9939c0152484721, type: 3}
+  - {fileID: 8300000, guid: 26dc3b3f7e47ade4a9a20b150c6cf699, type: 3}
+  - {fileID: 8300000, guid: d23b1c794a949c24ba3959279220561d, type: 3}
+  - {fileID: 8300000, guid: 012a0a563dbe1d649bdc6421eb6a8158, type: 3}
+  - {fileID: 8300000, guid: dc70c644ed78f364ea3c59005b22950f, type: 3}
+  MasterVolume: 0.5
 --- !u!1 &1518225006
 GameObject:
   m_ObjectHideFlags: 0

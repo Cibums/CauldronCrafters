@@ -132,6 +132,8 @@ public class GameController : MonoBehaviour
     private int currentCustomerRequestIndex = 0;
     public void NextCustomer(bool retry, bool isFirst = false)
     {
+        AudioController.instance.PlaySound(3); //bell
+
         roundIsDone = false;
 
         if (!retry && !isFirst)
@@ -203,6 +205,8 @@ public class GameController : MonoBehaviour
     private bool roundIsDone = false;
     public void OnPlayerDoneClicked()
     {
+        AudioController.instance.PlaySound(0); //click
+
         if (MonsterController.instance.IsInvokingActions())
         {
             return;
@@ -217,9 +221,11 @@ public class GameController : MonoBehaviour
     }
 
 
-
+    AudioSource boilingSound = null;
     IEnumerator SummonAndCreateMonster()
     {
+        boilingSound = AudioController.instance.PlaySoundWithoutEnd(5, 0.8f, 0.0f); //boiling
+
         cauldronParticleSystem.gameObject.SetActive(true);
         GoToMonsterView();
         yield return new WaitForSeconds(0.5f);
@@ -231,6 +237,8 @@ public class GameController : MonoBehaviour
         SummonSmokeParticle(MonsterController.instance.gameObject.transform.position, Color.white);
         MonsterController.instance.SetGraphicsShowState(true);
 
+        AudioController.instance.PlaySound(1); //explosion
+
         MonsterController.instance.InvokeActionsInItems(1);
         StartCoroutine(CheckIfActionsAreDone());
     }
@@ -239,11 +247,18 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         yield return new WaitUntil(() => MonsterController.instance.IsInvokingActions() == false);
+        yield return new WaitForSeconds(2f);
         OnActionsAreDone();
     }
 
     private void OnActionsAreDone()
     {
+        if (boilingSound != null)
+        {
+            boilingSound.Stop();
+            Destroy(boilingSound);
+        }
+
         roundIsDone = true;
         UserInterfaceController.instance.SetReportVisibleState(true);
         StartCoroutine(UserInterfaceController.instance.FillInReportIEnumerator());

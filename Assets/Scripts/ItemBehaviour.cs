@@ -21,6 +21,7 @@ public class ItemBehaviour : MonoBehaviour
     void OnMouseDown()
     {
         offset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+        AudioController.instance.PlaySound(0, 0.5f); //click
     }
 
     void OnMouseDrag()
@@ -70,12 +71,14 @@ public class ItemBehaviour : MonoBehaviour
                     }
                 }
 
+                AudioController.instance.PlaySound(6, 0.6f); //water
                 MonsterController.instance.addedItems.Add(item);
                 Destroy(gameObject);
                 return;
             }
         }
 
+        AudioController.instance.PlaySound(2); //on_floor
         transform.GetChild(0).position = transform.position;
     }
 }

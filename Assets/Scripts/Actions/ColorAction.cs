@@ -13,6 +13,7 @@ public class ColorAction : BaseAction
         MonsterController.instance.monsterState = UpdateStateFromAction(oldState); //Updates state
 
         GameController.instance.SummonSmokeParticle(MonsterController.instance.gameObject.transform.position, _color);
+        AudioController.instance.PlaySound(1); //explosion
         MonsterController.instance.SetColor(_color);
     }
 
