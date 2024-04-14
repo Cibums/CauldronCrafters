@@ -25,6 +25,30 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void UnlockRandomItem()
+    {
+        if (allItems.Length == 0)
+        {
+            Debug.LogError("No items are available in allItems array.");
+            return;
+        }
+
+        if (unlockedItems.Count >= allItems.Length)
+        {
+            Debug.LogError("All items are already unlocked.");
+            return;
+        }
+
+        int randomIndex;
+        do
+        {
+            randomIndex = UnityEngine.Random.Range(0, allItems.Length);
+        } while (unlockedItems.Contains(randomIndex));
+
+        unlockedItems.Add(randomIndex);
+        Debug.Log("Unlocked item at index: " + randomIndex);
+    }
+
     public void GoToMonsterView()
     {
         UserInterfaceController.instance.SetCustomerRequestVisibleState(false);
@@ -79,6 +103,11 @@ public class GameController : MonoBehaviour
         if (!retry)
         {
             customerIndex++;
+        }
+
+        if (customerIndex % 2 == 0 && customerIndex > 0)
+        {
+            UnlockRandomItem();
         }
 
         MonsterController.instance.ResetMonster();
