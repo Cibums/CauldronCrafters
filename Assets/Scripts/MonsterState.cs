@@ -6,9 +6,15 @@ using UnityEngine;
 [Serializable]
 public class MonsterState
 {
-    public PaletteColor currentColor;
+    public PaletteColor? currentColor = null;
     public MonsterSizeGetter currentSize = MonsterSizeGetter.Medium;
     public List<string> otherProperties = new List<string>();
+    public List<Item> addedItems = new List<Item>();
+    public bool canChangeColor = true;
+    public bool itemsWereChanged = false;
+
+    public int enhanceCountdown = 0;
+    public int itemMultiplier = 1;
 
     public void ChangeProperty(string prop, bool shouldRemove, bool ableToIncrease)
     {
@@ -99,5 +105,10 @@ public class MonsterState
         }
 
         return true;
+    }
+    public void EnhanceNextItem(int force = 2, int itemCount = 1)
+    {
+        itemMultiplier = force;
+        enhanceCountdown = itemCount;
     }
 }

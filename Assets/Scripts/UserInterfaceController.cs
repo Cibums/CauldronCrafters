@@ -9,7 +9,10 @@ using UnityEngine.UI;
 public class UserInterfaceController : MonoBehaviour
 {
     [Header("Overlay UI")]
-    public Transform BackgroundPanel;
+    public Transform ReportBackgroundPanel;
+    public Transform PopupBackgroundPanel;
+
+    public Button summonButton;
 
     public Transform CustomerRequestPanel;
     public TextMeshProUGUI CustomerRequestText;
@@ -46,16 +49,18 @@ public class UserInterfaceController : MonoBehaviour
     public void SetReportVisibleState(bool state)
     {
         ReportPanel.gameObject.SetActive(state);
-        if (BackgroundPanel.gameObject.activeSelf != state)
+        if (ReportBackgroundPanel.gameObject.activeSelf != state)
         {
-            BackgroundPanel.gameObject.SetActive(state);
+            Debug.Log($"Set background state: {state}");
+            ReportBackgroundPanel.gameObject.SetActive(state);
         }
     }
 
     public void ShowGeneralPopup(string title, string content)
     {
         GeneralInformationWindowPopup.gameObject.SetActive(true);
-        BackgroundPanel.gameObject.SetActive(true);
+        Debug.Log($"Set background state: True");
+        PopupBackgroundPanel.gameObject.SetActive(true);
 
         GeneralInformationWindowPopupTitleText.SetText(title);
         GeneralInformationWindowPopupContentText.SetText(content);
@@ -64,7 +69,8 @@ public class UserInterfaceController : MonoBehaviour
     public void HideGeneralPopup()
     {
         GeneralInformationWindowPopup.gameObject.SetActive(false);
-        BackgroundPanel.gameObject.SetActive(false);
+        Debug.Log($"Set background state: False");
+        PopupBackgroundPanel.gameObject.SetActive(false);
     }
 
     public void SetCustomerRequestVisibleState(bool state)
@@ -225,6 +231,7 @@ public class UserInterfaceController : MonoBehaviour
     public void NextOrRetry()
     {
         AudioController.instance.PlaySound(0); //click
+        isSimplified = false;
         GameController.instance.NextCustomer(reportHasFailed);
     }
 }

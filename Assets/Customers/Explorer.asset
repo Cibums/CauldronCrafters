@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f18d2c4c941155b43aca0ec7b3e5bea9, type: 3}
+  m_Name: Explorer
+  m_EditorClassIdentifier: 
+  RichMonsterDescription: I'm in need of a creature that's <b>SHARP</b> enough to
+    navigate through jungles and tempting enough to lure out rare beasts for my research!
+  WantedMonsterProperties:
+    ColorMatters: 0
+    PaletteColor: 0
+    SizeMatters: 0
+    MonsterSize: 0
+    otherProperties:
+    - Trait: sharp
+      AmountRule: 1
+      Count: 3

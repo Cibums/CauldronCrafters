@@ -15,6 +15,11 @@ public class ItemBehaviour : MonoBehaviour
 
     public void UpdateGraphics()
     {
+        if (item.graphics == null)
+        {
+            return;
+        }
+
         GetComponentInChildren<SpriteRenderer>().sprite = item.graphics;
     }
 
@@ -72,7 +77,7 @@ public class ItemBehaviour : MonoBehaviour
                 }
 
                 AudioController.instance.PlaySound(6, 0.6f); //water
-                MonsterController.instance.addedItems.Add(item);
+                MonsterController.instance.monsterState.addedItems.Add(item);
                 Destroy(gameObject);
                 return;
             }

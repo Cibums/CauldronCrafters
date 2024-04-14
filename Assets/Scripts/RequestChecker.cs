@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,10 +6,10 @@ using UnityEngine;
 
 public static class RequestChecker
 {
-    public static bool RequestIsPossibleWithUnlockedItems(CustomerRequest request)
+    public static bool RequestIsPossibleWithUnlockedItems(CustomerRequest request, bool checkForRandom = false)
     {
-        Debug.Log($"<b>Testing the customer {request.name}</b>");
-        HashSet<Item> itemsToTest = GetItemsToIterate(request);
+        Debug.Log($"<b>Testing {request.name} with checkForRandom={checkForRandom}</b>");
+        HashSet<Item> itemsToTest = GetItemsToIterate(request, checkForRandom);
         return CheckCombinations(new List<Item>(itemsToTest), request, new List<Item>());
     }
 
@@ -19,12 +20,12 @@ public static class RequestChecker
         foreach (Item item in currentSequence)
         {
             Debug.Log($"Adding the effects of {item.itemName}");
-
             foreach (var action in item.actions)
             {
                 //Invoke action on testState
                 MonsterState oldState = testState;
                 testState = action.UpdateStateFromAction(oldState);
+                if(testState.enhanceCountdown > 0) testState.enhanceCountdown--;
             }
         }
 
@@ -33,14 +34,17 @@ public static class RequestChecker
 
     private static bool CheckCombinations(List<Item> availableItems, CustomerRequest request, List<Item> currentSequence)
     {
-        // Base case: If current sequence of items fulfills the request, return true
-        if (RequestFulfilled(currentSequence, request))
+        if (availableItems.Count != 0 && currentSequence.Count != 0)
         {
-            string sequence = string.Join("\n- ", currentSequence.Select(item => item.itemName));
-            if (currentSequence.Any()) sequence = "- " + sequence;
+            // Base case: If current sequence of items fulfills the request, return true
+            if (RequestFulfilled(currentSequence, request))
+            {
+                string sequence = string.Join("\n- ", currentSequence.Select(item => item.itemName));
+                if (currentSequence.Any()) sequence = "- " + sequence;
 
-            Debug.Log($"<color=green>This sequence of items worked:\n {sequence}</color>");
-            return true;
+                Debug.Log($"<color=green>This sequence of items worked:\n {sequence}</color>");
+                return true;
+            }
         }
 
         // Recursive case: Try adding each available item in sequence and recurse
@@ -66,17 +70,18 @@ public static class RequestChecker
         return false;
     }
 
-    private static HashSet<Item> GetItemsToIterate(CustomerRequest request)
+    private static HashSet<Item> GetItemsToIterate(CustomerRequest request, bool checkForRandom = false)
     {
         Debug.Log($"Getting items to iterate through");
         HashSet<Item> itemsToIterate = new HashSet<Item>();
+
 
         if (request.WantedMonsterProperties.ColorMatters)
         {
             //Gets all of the items that could in theory change the color to the rigth color
             var colorItems = GameController.instance.allItems.Where(item =>
                 item.actions.Any(action =>
-                    action is ColorAction colorAction && (colorAction.color == request.WantedMonsterProperties.PaletteColor || colorAction.color == PaletteColor.Random)))
+                    action is ColorAction colorAction && (colorAction.color == request.WantedMonsterProperties.PaletteColor || (checkForRandom && colorAction.color == PaletteColor.Random))))
                 .ToList();
 
             itemsToIterate.UnionWith(colorItems);
@@ -104,11 +109,35 @@ public static class RequestChecker
             itemsToIterate.UnionWith(traitItems);
         }
 
+        var enhanceItems = GameController.instance.allItems.Where(item =>
+            item.actions.Any(action =>
+                action is EnhanceAction propertyAction))
+            .ToList();
+
+        itemsToIterate.UnionWith(enhanceItems);
+
+        Debug.Log($"<b>All Items To Check</b>");
         foreach (Item i in itemsToIterate)
         {
             Debug.Log($"- {i.itemName}");
         }
 
-        return itemsToIterate;
+        // Create a dictionary to efficiently map item names to their indices
+        Dictionary<string, int> itemIndexMap = GameController.instance.allItems
+            .Select((item, index) => new { Item = item, Index = index })
+            .ToDictionary(pair => pair.Item.itemName, pair => pair.Index);
+
+        // Use the dictionary for lookup
+        var unlocked = itemsToIterate
+            .Where(item => GameController.instance.unlockedItems.Contains(itemIndexMap[item.itemName]))
+            .ToHashSet();
+
+        Debug.Log($"<b>Unlocked Items</b>");
+        foreach (Item i in unlocked)
+        {
+            Debug.Log($"- {i.itemName}");
+        }
+
+        return unlocked;
     }
 }

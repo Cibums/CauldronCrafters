@@ -10,12 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15138c3aedf9fdc4a8d0cb4fca57cef5, type: 3}
-  m_Name: Radio
+  m_Name: VampiresCloak
   m_EditorClassIdentifier: 
-  itemName: Radio
-  graphics: {fileID: 21300000, guid: b9e94869d5e00044fa30631b6cf3c3d6, type: 3}
+  itemName: Vampire's Cloak
+  graphics: {fileID: 21300000, guid: f49f38fcb8ae06a4e9ea2326255e53e2, type: 3}
   actions: []
   actionData:
-  - '{"property":"spacially aware","shouldRemove":false,"ableToIncrease":true}'
+  - '{"color":7}'
+  - '{"trait":"mystical","shouldRemove":false,"ableToIncrease":true,"count":1}'
   actionTypes:
+  - ColorAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - AddRemovePropertyAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

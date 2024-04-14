@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using UnityEngine;
 
 public class MonsterController : MonoBehaviour
@@ -10,8 +8,6 @@ public class MonsterController : MonoBehaviour
     private SpriteRenderer graphics;
 
     public MonsterState monsterState;
-
-    public List<Item> addedItems = new List<Item>();
 
     private void Awake()
     {
@@ -37,6 +33,8 @@ public class MonsterController : MonoBehaviour
     public void ResetMonster()
     {
         SetColor(Color.white);
+        SetSize(1.0f);
+        monsterState = new MonsterState();
         graphics.gameObject.SetActive(false);
     }
 
@@ -60,20 +58,57 @@ public class MonsterController : MonoBehaviour
         return isInvokingActions;
     }
 
+    public int invokedItemsCount = 0;
     private bool isInvokingActions = false;
+
     private IEnumerator InvokeActionsInItemsIEnumerator(float seconds)
     {
+        invokedItemsCount = 0;
         isInvokingActions = true;
         yield return new WaitForSeconds(seconds);
 
-        foreach (Item item in addedItems) 
-        {
-            foreach (BaseAction action in item.actions)
-            {
-                action.InvokeAction();
-                yield return new WaitForSeconds(seconds);
-            }
-        }
+        DoActionsForItem(seconds);
+        
         isInvokingActions = false;
+    }
+
+    private void DoActionsForItem(float seconds)
+    {
+        List<Item> items = monsterState.addedItems;
+
+        int index = 0;
+        foreach (Item item in items)
+        {
+            if (monsterState.itemsWereChanged)
+            {
+                monsterState.itemsWereChanged = false;
+                DoActionsForItem(seconds);
+            }
+
+            if (invokedItemsCount > index)
+            {
+                index++;
+                continue;
+            }
+
+            StartCoroutine(DoAction(item, seconds));
+
+            if (monsterState.enhanceCountdown > 0)
+            {
+                monsterState.enhanceCountdown--;
+            }
+
+            invokedItemsCount++;
+            index++;
+        }
+    }
+
+    private IEnumerator DoAction(Item item, float seconds)
+    {
+        foreach (BaseAction action in item.actions)
+        {
+            action.InvokeAction();
+            yield return new WaitForSeconds(seconds);
+        }
     }
 }

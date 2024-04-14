@@ -14,7 +14,10 @@ public class ColorAction : BaseAction
 
         GameController.instance.SummonSmokeParticle(MonsterController.instance.gameObject.transform.position, _color);
         AudioController.instance.PlaySound(1); //explosion
-        MonsterController.instance.SetColor(_color);
+        if (MonsterController.instance.monsterState.canChangeColor)
+        {
+            MonsterController.instance.SetColor(_color);
+        }
     }
 
     public override MonsterState UpdateStateFromAction(MonsterState oldState)
@@ -23,7 +26,11 @@ public class ColorAction : BaseAction
 
         (Color monsterColor, PaletteColor generatedPaletteColor) = MonsterColor.GetColor(color);
         _color = monsterColor;
-        newState.currentColor = generatedPaletteColor;
+
+        if (newState.canChangeColor)
+        {
+            newState.currentColor = generatedPaletteColor;
+        }
 
         return newState;
     }

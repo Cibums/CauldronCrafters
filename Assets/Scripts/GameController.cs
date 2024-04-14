@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
@@ -30,18 +31,18 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void UnlockRandomItem()
+    public Item UnlockRandomItem()
     {
         if (allItems.Length == 0)
         {
             Debug.LogError("No items are available in allItems array.");
-            return;
+            return null;
         }
 
         if (unlockedItems.Count >= allItems.Length)
         {
             Debug.LogError("All items are already unlocked.");
-            return;
+            return null;
         }
 
         int randomIndex;
@@ -52,14 +53,7 @@ public class GameController : MonoBehaviour
 
         unlockedItems.Add(randomIndex);
 
-        Item itemUnlocked = allItems[randomIndex];
-
-        UserInterfaceController.instance.ShowGeneralPopup(
-            itemUnlocked.itemName, 
-            $"You unlocked <b>{itemUnlocked.itemName}</b>\nThis is what it does:\n\n{itemUnlocked.GetActionsText()}"
-        );
-
-        Debug.Log("Unlocked item at index: " + randomIndex);
+        return allItems[randomIndex];
     }
 
     public void GoToMonsterView()
@@ -100,6 +94,12 @@ public class GameController : MonoBehaviour
     void Start()
     {
         cauldronParticleSystem = GameObject.FindGameObjectWithTag("Cauldron").transform.GetComponentInChildren<ParticleSystem>();
+
+        for (int i = 0; i < 3; i++)
+        {
+            UnlockRandomItem();
+        }
+
         NextCustomer(false, true);
     }
 
@@ -108,7 +108,7 @@ public class GameController : MonoBehaviour
         return allCustomerRequests[currentCustomerRequestIndex];
     }
 
-    private CustomerRequest GetRandomValidCustomerRequest() 
+    private CustomerRequest GetRandomValidCustomerRequest(bool checkForRandom = false) 
     {
         List<CustomerRequest> validCustomerRequests = allCustomerRequests
             .Select((request, index) => new { Request = request, Index = index })  // Project each request with its index
@@ -119,14 +119,27 @@ public class GameController : MonoBehaviour
         {
             int index = UnityEngine.Random.Range(0, validCustomerRequests.Count); // Get a random index
             CustomerRequest request = validCustomerRequests[index];  // Retrieve the request at this index
-            if (RequestChecker.RequestIsPossibleWithUnlockedItems(request))
+            if (RequestChecker.RequestIsPossibleWithUnlockedItems(request, checkForRandom))
             {
                 return request;  // Return the request if it passes the checker
             }
             validCustomerRequests.RemoveAt(index);  // Remove the request from the list if it fails the checker
         }
 
-        throw new InvalidOperationException("No valid customer requests available.");
+        //if (!checkForRandom)
+        //{
+        //    return GetRandomValidCustomerRequest(true);
+        //}
+
+        Item item = UnlockRandomItem();
+
+        if (item == null)
+        {
+            completedCustomers.Clear();
+            UserInterfaceController.instance.ShowGeneralPopup("Sorry :(", "Unfortunately, the developer has not been able to add more customers, that also are possible to complete, than the ones you've already played. We will bring back the old customers for you :)");
+        }
+
+        return GetRandomValidCustomerRequest(false);
     }
 
     private int currentCustomerRequestIndex = 0;
@@ -147,11 +160,16 @@ public class GameController : MonoBehaviour
 
         if (completedCustomers.Count % 2 == 0 && completedCustomers.Count > 0)
         {
-            UnlockRandomItem();
-        }
+            Item unlocked = UnlockRandomItem();
 
-        MonsterController.instance.ResetMonster();
-        ResetItems();
+            if (unlocked != null)
+            {
+                UserInterfaceController.instance.ShowGeneralPopup(
+                    unlocked.itemName,
+                    $"You unlocked <b>{unlocked.itemName}</b>\nThis is what it does:\n\n{unlocked.GetActionsText()}"
+                );
+            }
+        }
 
         CustomerRequest customerRequest = allCustomerRequests[currentCustomerRequestIndex];
 
@@ -161,21 +179,23 @@ public class GameController : MonoBehaviour
             currentCustomerRequestIndex = Array.FindIndex(allCustomerRequests, x => x.Equals(customerRequest));
         }
 
+        MonsterController.instance.ResetMonster();
+        ResetItems();
+
         cauldronParticleSystem.gameObject.SetActive(false);
 
         UserInterfaceController.instance.SetCustomerRequestVisibleState(true);
         UserInterfaceController.instance.SetCustomerText(customerRequest.GetMonsterDescription());
 
         UserInterfaceController.instance.SetReportVisibleState(false);
+        UserInterfaceController.instance.summonButton.gameObject.SetActive(true);
 
         MoveCamera(new Vector2(0,0));
-
-        //Debug.Log($"Customer Request Possibilty: {RequestChecker.RequestIsPossibleWithUnlockedItems(allCustomerRequests[customerIndex])}");
     }
 
     private void ResetItems()
     {
-        MonsterController.instance.addedItems.Clear();
+        MonsterController.instance.monsterState.addedItems.Clear();
 
         GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
 
@@ -187,24 +207,18 @@ public class GameController : MonoBehaviour
         foreach (int i in unlockedItems)
         {
             Transform spawnedItem = Instantiate(ItemPrefab).transform;
-            spawnedItem.position = new Vector3(UnityEngine.Random.Range(-7.5f, 0f), UnityEngine.Random.Range(-1.0f, 2.5f), 0);
+            spawnedItem.position = new Vector3(UnityEngine.Random.Range(-7.5f, 0f), UnityEngine.Random.Range(-1.0f, 2.0f), 0);
             ItemBehaviour behaviour = spawnedItem.gameObject.GetComponent<ItemBehaviour>();
             behaviour.item = allItems[i];
             behaviour.UpdateGraphics();
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnPlayerDoneClicked();
-        }
-    }
-
     private bool roundIsDone = false;
     public void OnPlayerDoneClicked()
     {
+        UserInterfaceController.instance.summonButton.gameObject.SetActive(false);
+
         AudioController.instance.PlaySound(0); //click
 
         if (MonsterController.instance.IsInvokingActions())

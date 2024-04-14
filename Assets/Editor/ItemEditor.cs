@@ -150,9 +150,5 @@ public class ItemEditor : Editor
             item.actions.Add(instance);
             EditorUtility.SetDirty(item);
         }
-        else
-        {
-            Debug.LogError("Failed to create instance of type " + actionType.Name);
-        }
     }
 }

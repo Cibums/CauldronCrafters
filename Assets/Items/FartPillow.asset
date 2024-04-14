@@ -16,6 +16,6 @@ MonoBehaviour:
   graphics: {fileID: 21300000, guid: e2acbaf390391954d8932e3df258a7de, type: 3}
   actions: []
   actionData:
-  - '{"property":"funny","shouldRemove":false,"ableToIncrease":true}'
+  - '{"trait":"funny","shouldRemove":false,"ableToIncrease":true,"count":1}'
   actionTypes:
   - AddRemovePropertyAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
