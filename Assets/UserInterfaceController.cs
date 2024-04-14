@@ -10,12 +10,17 @@ public class UserInterfaceController : MonoBehaviour
 {
     [Header("Overlay UI")]
     public Transform BackgroundPanel;
+
     public Transform CustomerRequestPanel;
     public TextMeshProUGUI CustomerRequestText;
 
     public Transform ReportPanel;
     public TextMeshProUGUI ReportPanelReport;
     public Button ReportPanelNextButton;
+
+    public Transform GeneralInformationWindowPopup;
+    public TextMeshProUGUI GeneralInformationWindowPopupTitleText;
+    public TextMeshProUGUI GeneralInformationWindowPopupContentText;
 
     [Header("Popup UI")]
     public GameObject InformationWindowPanel;
@@ -29,6 +34,8 @@ public class UserInterfaceController : MonoBehaviour
         {
             instance = this;
         }
+
+        HideGeneralPopup();
     }
 
     public void SetCustomerText(string text)
@@ -39,7 +46,27 @@ public class UserInterfaceController : MonoBehaviour
     public void SetReportVisibleState(bool state)
     {
         ReportPanel.gameObject.SetActive(state);
-        BackgroundPanel.gameObject.SetActive(state);
+        if (BackgroundPanel.gameObject.activeSelf != state)
+        {
+            BackgroundPanel.gameObject.SetActive(state);
+        }
+    }
+
+    public void ShowGeneralPopup(string title, string content)
+    {
+        Debug.Log("Showing");
+
+        GeneralInformationWindowPopup.gameObject.SetActive(true);
+        BackgroundPanel.gameObject.SetActive(true);
+
+        GeneralInformationWindowPopupTitleText.SetText(title);
+        GeneralInformationWindowPopupContentText.SetText(content);
+    }
+
+    public void HideGeneralPopup()
+    {
+        GeneralInformationWindowPopup.gameObject.SetActive(false);
+        BackgroundPanel.gameObject.SetActive(false);
     }
 
     public void SetCustomerRequestVisibleState(bool state)
