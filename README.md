@@ -45,7 +45,7 @@ Mistakes in the summoning process require starting over. As the shop grows, the 
 - **Game Engine:** Unity
 - **Programming Language(s):** C#
 - **Graphics Tools:** paint.net
-- **Sound Tools:** Audacity
+- **Sound Tools:** Audacity & https://sfxr.me/
 - **Music Tools:** BoscaCeoil
 
 ## Known Issues
