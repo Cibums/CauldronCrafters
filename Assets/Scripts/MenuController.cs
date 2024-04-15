@@ -13,7 +13,15 @@ public class MenuController : MonoBehaviour
         {
             DontDestroyOnLoad(t.gameObject);
         }
+    }
 
+    public void StartGame()
+    {
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
